@@ -1,10 +1,249 @@
 
-
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  firstName String?
+  lastName  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accounts     Account[]
+  budgets      Budget[]
+  categories   Category[]
+  goals        FinancialGoal[]
+  subscriptions Subscription[]
+}
+
+// Account model - handles both banking and investment accounts
+model Account {
+  id          String      @id @default(cuid())
+  userId      String
+  name        String
+  type        AccountType
+  balance     Decimal     @default(0)
+  currency    String      @default("PLN")
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  assets       Asset[]
+  budgets      Budget[]
+
+  @@map("accounts")
+}
+
+// Account types - unified for both banking and investment
+enum AccountType {
+  CHECKING      // Rachunek bieżący
+  SAVINGS       // Konto oszczędnościowe
+  CREDIT_CARD   // Karta kredytowa
+  INVESTMENT    // Konto inwestycyjne
+  CRYPTO        // Portfel kryptowalut
+  RETIREMENT    // Konto emerytalne
+  WALLET        // Portfel fizyczny
+}
+
+// Transaction model - for all money movements
+model Transaction {
+  id          String           @id @default(cuid())
+  accountId   String
+  categoryId  String?
+  amount      Decimal
+  type        TransactionType
+  description String
+  date        DateTime         @default(now())
+  isRecurring Boolean          @default(false)
+  tags        String[]         // For flexible categorization
+  transferId  String?          // Links transfer transactions (outgoing + incoming)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations
+  account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@map("transactions")
+}
+
+// Transaction types
+enum TransactionType {
+  INCOME     // Przychód
+  EXPENSE    // Wydatek
+  TRANSFER_IN // Przelew przychodzący
+  TRANSFER_OUT // Przelew wychodzący
+  INVESTMENT  // Inwestycja
+  DIVIDEND    // Dywidenda
+  INTEREST    // Odsetki
+}
+
+// Category model - for transaction categorization
+model Category {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  color       String?  // For UI
+  icon        String?  // For UI
+  parentId    String?  // For nested categories
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  budgets      Budget[]
+  parent       Category?     @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children     Category[]    @relation("CategoryHierarchy")
+
+  @@unique([userId, name])
+  @@map("categories")
+}
+
+// Asset model - for investments (stocks, crypto, etc.)
+model Asset {
+  id           String      @id @default(cuid())
+  accountId    String
+  symbol       String      // AAPL, BTC, etc.
+  name         String
+  type         AssetType
+  quantity     Decimal
+  avgBuyPrice  Decimal
+  currentPrice Decimal?    // Updated via API
+  currency     String      @default("USD")
+  buyDate      DateTime?
+  lastUpdated  DateTime    @default(now())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  // Relations
+  account     Account             @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  priceHistory AssetPriceHistory[]
+
+  @@unique([accountId, symbol])
+  @@map("assets")
+}
+
+// Asset types
+enum AssetType {
+  STOCK      // Akcje
+  BOND       // Obligacje
+  ETF        // ETF
+  CRYPTO     // Kryptowaluty
+  COMMODITY  // Surowce
+  REAL_ESTATE // Nieruchomości
+  CASH       // Gotówka
+}
+
+// Budget model - for financial planning
+model Budget {
+  id          String     @id @default(cuid())
+  userId      String
+  accountId   String?
+  categoryId  String?
+  name        String
+  amount      Decimal     // Budget limit (e.g., 1000 zł)
+  period      BudgetPeriod
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account  Account? @relation(fields: [accountId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@map("budgets")
+}
+
+// Budget periods
+enum BudgetPeriod {
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+// Financial Goal model - for long-term planning
+model FinancialGoal {
+  id          String      @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  targetAmount Decimal
+  currentAmount Decimal @default(0)
+  targetDate  DateTime?
+  category    GoalCategory
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("financial_goals")
+}
+
+// Goal categories
+enum GoalCategory {
+  EMERGENCY_FUND
+  RETIREMENT
+  HOUSE
+  CAR
+  EDUCATION
+  TRAVEL
+  INVESTMENT
+  OTHER
+}
+
+// Subscription model - for recurring expenses
+model Subscription {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  amount      Decimal
+  currency    String   @default("PLN")
+  frequency   SubscriptionFrequency
+  nextBilling DateTime
+  isActive    Boolean  @default(true)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+// Subscription frequencies
+enum SubscriptionFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+// Asset Price History - for tracking price changes over time
+model AssetPriceHistory {
+  id      String   @id @default(cuid())
+  assetId String
+  asset   Asset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  price   Decimal
+  date    DateTime @default(now())
+
+  @@map("asset_price_history")
+  @@index([assetId, date]) // Optimized for chart queries
 }
