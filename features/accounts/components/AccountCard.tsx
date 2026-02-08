@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CreditCard, Wallet, TrendingUp, PiggyBank, Bitcoin, Shield, Wallet2 } from "lucide-react";
+import { QuickTransactionButton } from "@/features/transactions/components/QuickTransactionButton";
 
 interface AccountCardProps {
   account: {
@@ -97,24 +98,36 @@ export function AccountCard({ account }: AccountCardProps) {
     <Card className={`relative overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${!account.isActive ? "opacity-50" : ""}`}>
       <div className={`absolute inset-0 bg-gradient-to-br ${typeInfo.bgGradient} opacity-50`} />
       <CardHeader className="pb-3 relative">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className={`p-2 rounded-lg bg-gradient-to-br ${typeInfo.gradient}`}>
-              <Icon className="h-4 w-4 text-white" />
-            </div>
-            <CardTitle className="text-lg font-semibold">{account.name}</CardTitle>
+        <div className="flex items-center gap-2">
+          <div className={`p-2 rounded-lg bg-gradient-to-br ${typeInfo.gradient}`}>
+            <Icon className="h-4 w-4 text-white" />
           </div>
+          <CardTitle className="text-lg font-semibold">{account.name}</CardTitle>
         </div>
         <Badge className={`ml-10 ${typeInfo.badgeColor} border-0`}>
           {typeInfo.label}
         </Badge>
       </CardHeader>
-      <CardContent className="relative">
+      <CardContent className="relative pb-16">
         <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           {formatBalance(account.balance, account.currency)}
         </div>
         {!account.isActive && (
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Account inactive</p>
+        )}
+        {account.isActive && (
+          <div className="absolute bottom-4 right-4 flex gap-1">
+            <QuickTransactionButton 
+              account={account as any} 
+              type="deposit" 
+              onSuccess={() => console.log('Deposit successful')}
+            />
+            <QuickTransactionButton 
+              account={account as any} 
+              type="withdraw" 
+              onSuccess={() => console.log('Withdraw successful')}
+            />
+          </div>
         )}
       </CardContent>
     </Card>
