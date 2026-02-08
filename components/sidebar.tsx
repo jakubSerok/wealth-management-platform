@@ -11,8 +11,11 @@ import {
   Target,
   Settings,
   LogOut,
+  Plus,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { TransactionModal } from "@/features/transactions/components/TransactionModal";
+import { useState } from "react";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -24,6 +27,7 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
 
   return (
     <div className="w-64 bg-white border-r border-gray-200 min-h-screen p-4">
@@ -51,6 +55,19 @@ export function Sidebar() {
         })}
       </nav>
 
+      {/* Quick Actions Section */}
+      <div className="mt-8 pt-8 border-t border-gray-200">
+        <h3 className="text-sm font-semibold text-gray-600 mb-3">Actions  </h3>
+        <Button
+          onClick={() => setIsTransactionModalOpen(true)}
+          className="w-full justify-start"
+          variant="default"
+        >
+          <Plus className="mr-3 h-4 w-4" />
+          New Transaction
+        </Button>
+      </div>
+
       <div className="absolute bottom-4 left-4 right-4">
         <Button
           variant="ghost"
@@ -61,6 +78,12 @@ export function Sidebar() {
           Logout
         </Button>
       </div>
+
+      <TransactionModal
+        isOpen={isTransactionModalOpen}
+        onClose={() => setIsTransactionModalOpen(false)}
+        onSuccess={() => setIsTransactionModalOpen(false)}
+      />
     </div>
   );
 }
