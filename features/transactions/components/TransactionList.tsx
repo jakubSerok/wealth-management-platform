@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TransactionWithRelations, TransactionFilters } from "../types";
-import { getTransactionsQuery } from "../queries";
+import { fetchTransactions } from "../client-actions";
 import { TransactionFiltersComponent } from "./TransactionFilters";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
@@ -16,17 +16,19 @@ interface TransactionListProps {
 }
 
 export function TransactionList({ accountId, limit }: TransactionListProps) {
-  const [transactions, setTransactions] = useState<TransactionWithRelations[]>([]);
+  const [transactions, setTransactions] = useState<TransactionWithRelations[]>(
+    [],
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<TransactionFilters>({});
 
   useEffect(() => {
-    const fetchTransactions = async () => {
+    const fetchTransactionsData = async () => {
       try {
-        const transactionsData = await getTransactionsQuery({ 
-          accountId, 
+        const transactionsData = await fetchTransactions({
+          accountId,
           limit,
-          ...filters 
+          ...filters,
         });
         setTransactions(transactionsData || []);
       } catch (error) {
@@ -35,8 +37,8 @@ export function TransactionList({ accountId, limit }: TransactionListProps) {
         setIsLoading(false);
       }
     };
-    
-    fetchTransactions();
+
+    fetchTransactionsData();
   }, [accountId, limit, filters]);
 
   const getTransactionTypeColor = (type: string) => {
@@ -81,9 +83,9 @@ export function TransactionList({ accountId, limit }: TransactionListProps) {
 
   return (
     <div className="space-y-6">
-      <TransactionFiltersComponent 
-        filters={filters} 
-        onFiltersChange={setFilters} 
+      <TransactionFiltersComponent
+        filters={filters}
+        onFiltersChange={setFilters}
       />
       <Card>
         <CardHeader>
@@ -101,7 +103,9 @@ export function TransactionList({ accountId, limit }: TransactionListProps) {
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <Badge className={getTransactionTypeColor(transaction.type)}>
+                      <Badge
+                        className={getTransactionTypeColor(transaction.type)}
+                      >
                         {getTransactionTypeLabel(transaction.type)}
                       </Badge>
                       <span className="text-sm text-gray-500">
@@ -114,20 +118,37 @@ export function TransactionList({ accountId, limit }: TransactionListProps) {
                         {transaction.category.name}
                       </p>
                     )}
+                    {transaction.tags && transaction.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {transaction.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <p className="text-xs text-gray-400">
-                      {format(new Date(transaction.date), "PPP", { locale: pl })}
+                      {format(new Date(transaction.date), "PPP", {
+                        locale: pl,
+                      })}
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className={`font-bold ${
-                      transaction.type === "INCOME" || transaction.type === "TRANSFER_IN" 
-                        ? "text-green-600" 
-                        : "text-red-600"
-                    }`}>
-                      {transaction.type === "INCOME" || transaction.type === "TRANSFER_IN" 
-                        ? "+" 
-                        : "-"
-                      }
+                    <div
+                      className={`font-bold ${
+                        transaction.type === "INCOME" ||
+                        transaction.type === "TRANSFER_IN"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {transaction.type === "INCOME" ||
+                      transaction.type === "TRANSFER_IN"
+                        ? "+"
+                        : "-"}
                       {new Intl.NumberFormat("pl-PL", {
                         style: "currency",
                         currency: transaction.account.currency,

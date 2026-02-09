@@ -1,9 +1,14 @@
-import { CreateTransactionData, TransactionFilters } from "@/features/transactions/types";
-import {db} from "@/lib/db"
+import {
+  CreateTransactionData,
+  TransactionFilters,
+} from "@/features/transactions/types";
+import { db } from "@/lib/db";
 
-export async function createTransactionWithBalance(data:CreateTransactionData) {
-    return await db.$transaction(async (tx)=>{
-       const transaction = await tx.transaction.create({
+export async function createTransactionWithBalance(
+  data: CreateTransactionData,
+) {
+  return await db.$transaction(async (tx) => {
+    const transaction = await tx.transaction.create({
       data: {
         amount: data.amount,
         type: data.type,
@@ -15,10 +20,10 @@ export async function createTransactionWithBalance(data:CreateTransactionData) {
         tags: data.tags ?? [],
       },
     });
-        const isIncome = data.type === "INCOME"
-        const amountChange = isIncome ? data.amount : -data.amount;
+    const isIncome = data.type === "INCOME";
+    const amountChange = isIncome ? data.amount : -data.amount;
 
-       await tx.account.update({
+    await tx.account.update({
       where: { id: data.accountId },
       data: {
         balance: {
@@ -28,16 +33,21 @@ export async function createTransactionWithBalance(data:CreateTransactionData) {
     });
 
     return transaction;
-    })
-    
+  });
 }
-export async function getTransactionsFromDb(userId: string, filters: TransactionFilters) {
+export async function getTransactionsFromDb(
+  userId: string,
+  filters: TransactionFilters,
+) {
   const transactions = await db.transaction.findMany({
     where: {
-      account: { userId },  
+      account: { userId },
       accountId: filters.accountId,
       categoryId: filters?.categoryId,
       type: filters?.type,
+      description: filters?.description
+        ? { contains: filters.description, mode: "insensitive" }
+        : undefined,
       date: {
         gte: filters?.dateFrom,
         lte: filters?.dateTo,
@@ -54,12 +64,12 @@ export async function getTransactionsFromDb(userId: string, filters: Transaction
   });
 
   // Konwertuj Decimal na number dla kompatybilności z frontendem
-  return transactions.map(t => ({
+  return transactions.map((t) => ({
     ...t,
     amount: Number(t.amount),
     account: {
       ...t.account,
       balance: Number(t.account.balance),
-    }
+    },
   }));
 }
