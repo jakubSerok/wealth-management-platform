@@ -9,6 +9,7 @@ import {
   CreditCard,
   TrendingUp,
   Target,
+  User,
   Settings,
   LogOut,
   Plus,
@@ -22,6 +23,7 @@ const navigation = [
   { name: "Accounts", href: "/dashboard/accounts", icon: CreditCard },
   { name: "Transactions", href: "/dashboard/transactions", icon: TrendingUp },
   { name: "Goals", href: "/dashboard/goals", icon: Target },
+  { name: "Profile", href: "/dashboard/profile", icon: User },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
@@ -57,7 +59,7 @@ export function Sidebar() {
 
       {/* Quick Actions Section */}
       <div className="mt-8 pt-8 border-t border-gray-200">
-        <h3 className="text-sm font-semibold text-gray-600 mb-3">Actions  </h3>
+        <h3 className="text-sm font-semibold text-gray-600 mb-3">Actions </h3>
         <Button
           onClick={() => setIsTransactionModalOpen(true)}
           className="w-full justify-start"
