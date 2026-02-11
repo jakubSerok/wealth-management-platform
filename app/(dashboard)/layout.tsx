@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/sidebar";
+import { SessionProvider } from "next-auth/react";
 
 export default async function DashboardLayout({
   children,
@@ -13,9 +14,11 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <main className="flex-1">{children}</main>
-    </div>
+    <SessionProvider session={session}>
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1">{children}</main>
+      </div>
+    </SessionProvider>
   );
 }
