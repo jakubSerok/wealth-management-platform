@@ -2,24 +2,30 @@
 
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Trash2 } from "lucide-react";
 
 interface BudgetCardProps {
+  id: string;
   name: string;
   amount: number;
   spent: number;
   percentage: number;
   icon?: string;
   categoryName?: string;
+  onDelete?: (id: string) => void;
 }
 
 export function BudgetCard({
+  id,
   name,
   amount,
   spent,
   percentage,
   icon,
   categoryName,
+  onDelete,
 }: BudgetCardProps) {
   // Formatowanie kwot jako waluty
   const formatCurrency = (amount: number) => {
@@ -63,8 +69,20 @@ export function BudgetCard({
               )}
             </div>
           </div>
-          <div className={cn("text-sm font-medium", percentageColor)}>
-            {percentage.toFixed(1)}%
+          <div className="flex items-center gap-2">
+            <div className={cn("text-sm font-medium", percentageColor)}>
+              {percentage.toFixed(1)}%
+            </div>
+            {onDelete && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDelete(id)}
+                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </CardTitle>
       </CardHeader>

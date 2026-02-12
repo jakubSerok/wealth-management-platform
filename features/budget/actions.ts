@@ -28,3 +28,21 @@ export async function createBudgetAction(data: CreateBudgetData) {
     return { error: "Error while creating a budget." };
   }
 }
+export async function deleteBudget(id: string) {
+  const session = await auth();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    await db.budget.delete({
+      where: {
+        id,
+      },
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Database Error:", error);
+    return { error: "Error while deleting a budget." };
+  }
+}
