@@ -40,6 +40,7 @@ model Account {
   transactions Transaction[]
   assets       Asset[]
   budgets      Budget[]
+  goals        FinancialGoal[]
 
   @@map("accounts")
 }
@@ -180,6 +181,7 @@ enum BudgetPeriod {
 model FinancialGoal {
   id          String      @id @default(cuid())
   userId      String
+  accountId   String?     
   name        String
   description String?
   targetAmount Decimal
@@ -191,7 +193,8 @@ model FinancialGoal {
   updatedAt   DateTime    @updatedAt
 
   // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account? @relation(fields: [accountId], references: [id])
 
   @@map("financial_goals")
 }
@@ -205,6 +208,7 @@ enum GoalCategory {
   EDUCATION
   TRAVEL
   INVESTMENT
+  FAMILY_SAVINGS
   OTHER
 }
 

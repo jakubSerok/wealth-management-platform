@@ -7,11 +7,22 @@ import { BudgetCard } from "@/features/budget/components/BudgetCard";
 import { BudgetModal } from "@/features/budget/components/BudgetModal";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { deleteBudget } from "@/features/budget/actions";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function BudgetPage() {
   const { data: session, status } = useSession();
   const [budgetData, setBudgetData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [budgetToDelete, setBudgetToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -33,6 +44,31 @@ export default function BudgetPage() {
       fetchBudgets();
     }
   }, [session, status]);
+
+  const handleDeleteClick = (id: string) => {
+    setBudgetToDelete(id);
+    setDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (budgetToDelete) {
+      const result = await deleteBudget(budgetToDelete);
+      if (result.success) {
+        setBudgetData(
+          budgetData.filter((budget) => budget.id !== budgetToDelete),
+        );
+        setDeleteConfirmOpen(false);
+        setBudgetToDelete(null);
+      } else {
+        console.error(result.error);
+      }
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmOpen(false);
+    setBudgetToDelete(null);
+  };
 
   return (
     <div className="container mx-auto py-8">
@@ -60,16 +96,39 @@ export default function BudgetPage() {
           {budgetData.map((budget) => (
             <BudgetCard
               key={budget.id}
+              id={budget.id}
               name={budget.name}
               amount={budget.amount}
               spent={budget.spent}
               percentage={budget.percentage}
               icon={budget.category?.icon || undefined}
               categoryName={budget.category?.name}
+              onDelete={handleDeleteClick}
             />
           ))}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Budget</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this budget? This action cannot be
+              undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={cancelDelete}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
