@@ -21,7 +21,7 @@ export async function getBudgetQuery() {
     });
 
     const budgetsWithProgress = await Promise.all(
-      budgets.map(async (budget) => {
+      budgets.map(async (budget: any) => {
         // Pobierz ID kont użytkownika dla tego budżetu
         const userAccounts = await db.account.findMany({
           where: { userId: session.user.id },
