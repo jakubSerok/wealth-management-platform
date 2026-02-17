@@ -13,6 +13,7 @@ import {
   Settings,
   LogOut,
   Plus,
+  PieChart,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { TransactionModal } from "@/features/transactions/components/TransactionModal";
@@ -24,7 +25,7 @@ const navigation = [
   { name: "Transactions", href: "/dashboard/transactions", icon: TrendingUp },
   { name: "Goals", href: "/dashboard/goals", icon: Target },
   { name: "Profile", href: "/dashboard/profile", icon: User },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+  { name: "Investments", href: "/dashboard/investments", icon: PieChart },
 ];
 
 export function Sidebar() {
