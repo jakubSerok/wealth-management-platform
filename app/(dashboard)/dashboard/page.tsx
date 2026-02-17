@@ -9,7 +9,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const userData = await getUserAccounts(session.user.id);
+  const userData = await getUserAccounts();
 
   if (!userData) {
     throw new Error("User data not found");
