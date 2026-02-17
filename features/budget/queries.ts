@@ -28,7 +28,7 @@ export async function getBudgetQuery() {
           select: { id: true },
         });
 
-        const accountIds = userAccounts.map((acc) => acc.id);
+        const accountIds = userAccounts.map((acc: any) => acc.id);
 
         // Filtrowanie transakcji - tylko dla kont użytkownika i w zakresie dat
         const whereClause: any = {
