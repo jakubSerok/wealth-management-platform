@@ -49,7 +49,7 @@ export async function getGoals() {
             }
           : null,
         currentAmount,
-        targetAmount,
+        targetAmount: goal.targetAmount.toNumber(), // Convert Decimal to number
         percentage,
         remaining,
         daysLeft,
