@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { GoalCategory } from "./types";
 
 export async function getGoals() {
   const session = await auth();
@@ -40,6 +41,7 @@ export async function getGoals() {
 
       return {
         ...goal,
+        category: goal.category as GoalCategory, // Convert Prisma enum to local enum
         account: goal.account
           ? {
               ...goal.account,

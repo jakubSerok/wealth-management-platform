@@ -21,7 +21,7 @@ import {
 import { CalendarIcon, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { GoalCategory } from "@prisma/client";
+import { GoalCategory } from "../types";
 import { createGoal } from "../actions";
 import { CreateGoalData } from "../types";
 import { getUserAccounts } from "@/features/accounts/queries";

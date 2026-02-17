@@ -1,21 +1,41 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { createBudgetAction } from "../actions";
-import { BudgetPeriod } from "@prisma/client";
 import { getUserCategories } from "@/features/categories/queries";
 import { getUserAccounts } from "@/features/accounts/queries";
+
+enum BudgetPeriod {
+  MONTHLY = "MONTHLY",
+  YEARLY = "YEARLY",
+  WEEKLY = "WEEKLY",
+}
 
 interface BudgetModalProps {
   isOpen: boolean;
@@ -23,11 +43,7 @@ interface BudgetModalProps {
   onSuccess: () => void;
 }
 
-export function BudgetModal({
-  isOpen,
-  onClose,
-  onSuccess,
-}: BudgetModalProps) {
+export function BudgetModal({ isOpen, onClose, onSuccess }: BudgetModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -90,7 +106,7 @@ export function BudgetModal({
         setFormData({
           name: "",
           amount: "",
-          period: "MONTHLY",
+          period: "MONTHLY" as BudgetPeriod,
           categoryId: "",
           accountId: "",
           startDate: new Date(),
@@ -108,7 +124,7 @@ export function BudgetModal({
   };
 
   // Filter only main categories (without parentId)
-  const mainCategories = categories.filter(category => !category.parentId);
+  const mainCategories = categories.filter((category) => !category.parentId);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -123,7 +139,9 @@ export function BudgetModal({
               id="name"
               placeholder="np. Zakupy spożywcze"
               value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              }
               required
             />
           </div>
@@ -137,7 +155,9 @@ export function BudgetModal({
               min="0"
               placeholder="2000"
               value={formData.amount}
-              onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, amount: e.target.value }))
+              }
               required
             />
           </div>
@@ -146,7 +166,12 @@ export function BudgetModal({
             <Label htmlFor="period">Okres</Label>
             <Select
               value={formData.period}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, period: value as BudgetPeriod }))}
+              onValueChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  period: value as BudgetPeriod,
+                }))
+              }
             >
               <SelectTrigger>
                 <SelectValue />
@@ -164,7 +189,9 @@ export function BudgetModal({
             <Label htmlFor="categoryId">Kategoria (opcjonalnie)</Label>
             <Select
               value={formData.categoryId}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, categoryId: value }))}
+              onValueChange={(value) =>
+                setFormData((prev) => ({ ...prev, categoryId: value }))
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Wybierz kategorię" />
@@ -186,7 +213,9 @@ export function BudgetModal({
             <Label htmlFor="accountId">Konto (opcjonalnie)</Label>
             <Select
               value={formData.accountId}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, accountId: value }))}
+              onValueChange={(value) =>
+                setFormData((prev) => ({ ...prev, accountId: value }))
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Wybierz konto" />
@@ -210,18 +239,25 @@ export function BudgetModal({
                     variant="outline"
                     className={cn(
                       "w-full justify-start text-left font-normal",
-                      !formData.startDate && "text-muted-foreground"
+                      !formData.startDate && "text-muted-foreground",
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.startDate ? format(formData.startDate, "PPP", { locale: pl }) : <span>Wybierz datę</span>}
+                    {formData.startDate ? (
+                      format(formData.startDate, "PPP", { locale: pl })
+                    ) : (
+                      <span>Wybierz datę</span>
+                    )}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
                   <Calendar
                     mode="single"
                     selected={formData.startDate}
-                    onSelect={(date) => date && setFormData(prev => ({ ...prev, startDate: date }))}
+                    onSelect={(date) =>
+                      date &&
+                      setFormData((prev) => ({ ...prev, startDate: date }))
+                    }
                     initialFocus
                   />
                 </PopoverContent>
@@ -236,18 +272,25 @@ export function BudgetModal({
                     variant="outline"
                     className={cn(
                       "w-full justify-start text-left font-normal",
-                      !formData.endDate && "text-muted-foreground"
+                      !formData.endDate && "text-muted-foreground",
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.endDate ? format(formData.endDate, "PPP", { locale: pl }) : <span>Wybierz datę</span>}
+                    {formData.endDate ? (
+                      format(formData.endDate, "PPP", { locale: pl })
+                    ) : (
+                      <span>Wybierz datę</span>
+                    )}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
                   <Calendar
                     mode="single"
                     selected={formData.endDate}
-                    onSelect={(date) => date && setFormData(prev => ({ ...prev, endDate: date }))}
+                    onSelect={(date) =>
+                      date &&
+                      setFormData((prev) => ({ ...prev, endDate: date }))
+                    }
                     initialFocus
                   />
                 </PopoverContent>
@@ -260,7 +303,12 @@ export function BudgetModal({
               type="checkbox"
               id="emailAlert"
               checked={formData.emailAlert}
-              onChange={(e) => setFormData(prev => ({ ...prev, emailAlert: e.target.checked }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  emailAlert: e.target.checked,
+                }))
+              }
               className="rounded border-gray-300"
             />
             <Label htmlFor="emailAlert" className="text-sm">

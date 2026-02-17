@@ -20,7 +20,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AccountType } from "@prisma/client";
+
+enum AccountType {
+  CHECKING = "CHECKING",
+  SAVINGS = "SAVINGS",
+  CREDIT_CARD = "CREDIT_CARD",
+  INVESTMENT = "INVESTMENT",
+  CASH = "CASH",
+}
+
 import { addAccount } from "../action";
 
 interface AddNewCardProps {
@@ -39,7 +47,7 @@ export function AddNewCard({ children, onAccountCreated }: AddNewCardProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.type) {
       return;
     }
@@ -69,9 +77,7 @@ export function AddNewCard({ children, onAccountCreated }: AddNewCardProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add new account</DialogTitle>
@@ -86,7 +92,9 @@ export function AddNewCard({ children, onAccountCreated }: AddNewCardProps) {
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="np. Moje konto osobiste"
                 required
               />
@@ -95,7 +103,9 @@ export function AddNewCard({ children, onAccountCreated }: AddNewCardProps) {
               <Label htmlFor="type">Typ konta</Label>
               <Select
                 value={formData.type}
-                onValueChange={(value) => setFormData({ ...formData, type: value as AccountType })}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, type: value as AccountType })
+                }
                 required
               >
                 <SelectTrigger>
@@ -114,7 +124,9 @@ export function AddNewCard({ children, onAccountCreated }: AddNewCardProps) {
               <Label htmlFor="currency">Waluta</Label>
               <Select
                 value={formData.currency}
-                onValueChange={(value) => setFormData({ ...formData, currency: value })}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, currency: value })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Wybierz walutę" />
@@ -129,10 +141,17 @@ export function AddNewCard({ children, onAccountCreated }: AddNewCardProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting || !formData.name || !formData.type}>
+            <Button
+              type="submit"
+              disabled={isSubmitting || !formData.name || !formData.type}
+            >
               {isSubmitting ? "Creating..." : "Add account"}
             </Button>
           </DialogFooter>

@@ -18,7 +18,7 @@ export async function createGoal(data: CreateGoalData) {
         description: data.description,
         targetAmount: data.targetAmount,
         targetDate: data.targetDate,
-        category: data.category,
+        category: data.category as any, // Convert string to Prisma enum
         accountId: data.accountId,
       },
     });
@@ -28,6 +28,7 @@ export async function createGoal(data: CreateGoalData) {
     return { error: "Error while creating a goal." };
   }
 }
+
 export async function deleteGoal(id: string) {
   const session = await auth();
   if (!session) {

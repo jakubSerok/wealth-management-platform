@@ -23,8 +23,13 @@ import { format } from "date-fns";
 import { pl } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { TransactionFilters } from "../types";
-import { TransactionType } from "@prisma/client";
 import { fetchAccounts, fetchCategories } from "../client-actions";
+
+enum TransactionType {
+  INCOME = "INCOME",
+  EXPENSE = "EXPENSE",
+  TRANSFER = "TRANSFER",
+}
 
 interface Account {
   id: string;

@@ -1,4 +1,16 @@
-import { TransactionType, AccountType } from "@prisma/client";
+export enum TransactionType {
+  INCOME = "INCOME",
+  EXPENSE = "EXPENSE",
+  TRANSFER = "TRANSFER",
+}
+
+export enum AccountType {
+  CHECKING = "CHECKING",
+  SAVINGS = "SAVINGS",
+  CREDIT_CARD = "CREDIT_CARD",
+  INVESTMENT = "INVESTMENT",
+  CASH = "CASH",
+}
 
 export interface CreateTransactionData {
   accountId: string;

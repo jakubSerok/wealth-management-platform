@@ -1,4 +1,14 @@
-import { GoalCategory } from "@prisma/client";
+export enum GoalCategory {
+  EMERGENCY_FUND = "EMERGENCY_FUND",
+  RETIREMENT = "RETIREMENT",
+  HOUSE = "HOUSE",
+  CAR = "CAR",
+  EDUCATION = "EDUCATION",
+  TRAVEL = "TRAVEL",
+  INVESTMENT = "INVESTMENT",
+  FAMILY_SAVINGS = "FAMILY_SAVINGS",
+  OTHER = "OTHER",
+}
 
 export interface CreateGoalData {
   name: string;

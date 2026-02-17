@@ -4,7 +4,21 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
 import { TransactionModal } from "./TransactionModal";
-import { Account } from "@prisma/client";
+
+interface Account {
+  id: string;
+  name: string;
+  balance: number;
+  currency: string;
+  type: string;
+  isActive: boolean;
+}
+
+enum TransactionType {
+  INCOME = "INCOME",
+  EXPENSE = "EXPENSE",
+  TRANSFER = "TRANSFER",
+}
 
 interface QuickTransactionButtonProps {
   account: Account;
@@ -12,10 +26,10 @@ interface QuickTransactionButtonProps {
   onSuccess?: () => void;
 }
 
-export function QuickTransactionButton({ 
-  account, 
-  type, 
-  onSuccess 
+export function QuickTransactionButton({
+  account,
+  type,
+  onSuccess,
 }: QuickTransactionButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -45,7 +59,11 @@ export function QuickTransactionButton({
         onClose={() => setIsModalOpen(false)}
         onSuccess={handleSuccess}
         defaultAccountId={account.id}
-        defaultType={type === "deposit" ? "INCOME" : "EXPENSE"}
+        defaultType={
+          type === "deposit"
+            ? ("INCOME" as TransactionType)
+            : ("EXPENSE" as TransactionType)
+        }
       />
     </>
   );

@@ -29,10 +29,15 @@ import { format } from "date-fns";
 import { pl } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { createTransactionAction } from "../actions";
-import { TransactionType } from "@prisma/client";
 import { auth } from "@/auth";
 import { getUserAccounts } from "@/features/accounts/queries";
 import { getUserCategories } from "@/features/categories/queries";
+
+enum TransactionType {
+  INCOME = "INCOME",
+  EXPENSE = "EXPENSE",
+  TRANSFER = "TRANSFER",
+}
 
 interface TransactionModalProps {
   isOpen: boolean;
@@ -99,7 +104,7 @@ export function TransactionModal({
       const result = await createTransactionAction({
         accountId: formData.accountId,
         amount: parseFloat(formData.amount),
-        type: formData.type as TransactionType,
+        type: formData.type as any, // Convert to Prisma enum
         description: formData.description,
         categoryId: formData.categoryId || undefined,
         date: formData.date,

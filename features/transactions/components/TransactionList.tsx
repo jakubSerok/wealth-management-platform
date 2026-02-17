@@ -4,7 +4,11 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TransactionWithRelations, TransactionFilters } from "../types";
+import {
+  TransactionWithRelations,
+  TransactionFilters,
+  TransactionType,
+} from "../types";
 import { fetchTransactions } from "../client-actions";
 import { TransactionFiltersComponent } from "./TransactionFilters";
 import { format } from "date-fns";
@@ -41,37 +45,27 @@ export function TransactionList({ accountId, limit }: TransactionListProps) {
     fetchTransactionsData();
   }, [accountId, limit, filters]);
 
-  const getTransactionTypeColor = (type: string) => {
+  const getTransactionTypeColor = (type: TransactionType) => {
     switch (type) {
-      case "INCOME":
+      case TransactionType.INCOME:
         return "bg-green-100 text-green-800";
-      case "EXPENSE":
+      case TransactionType.EXPENSE:
         return "bg-red-100 text-red-800";
-      case "TRANSFER_IN":
+      case TransactionType.TRANSFER:
         return "bg-blue-100 text-blue-800";
-      case "TRANSFER_OUT":
-        return "bg-orange-100 text-orange-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  const getTransactionTypeLabel = (type: string) => {
+  const getTransactionTypeLabel = (type: TransactionType) => {
     switch (type) {
-      case "INCOME":
+      case TransactionType.INCOME:
         return "Przychód";
-      case "EXPENSE":
+      case TransactionType.EXPENSE:
         return "Wydatek";
-      case "TRANSFER_IN":
-        return "Przelew przychodzący";
-      case "TRANSFER_OUT":
-        return "Przelew wychodzący";
-      case "INVESTMENT":
-        return "Inwestycja";
-      case "DIVIDEND":
-        return "Dywidenda";
-      case "INTEREST":
-        return "Odsetki";
+      case TransactionType.TRANSFER:
+        return "Przelew";
       default:
         return type;
     }
@@ -139,16 +133,12 @@ export function TransactionList({ accountId, limit }: TransactionListProps) {
                   <div className="text-right">
                     <div
                       className={`font-bold ${
-                        transaction.type === "INCOME" ||
-                        transaction.type === "TRANSFER_IN"
+                        transaction.type === TransactionType.INCOME
                           ? "text-green-600"
                           : "text-red-600"
                       }`}
                     >
-                      {transaction.type === "INCOME" ||
-                      transaction.type === "TRANSFER_IN"
-                        ? "+"
-                        : "-"}
+                      {transaction.type === TransactionType.INCOME ? "+" : "-"}
                       {new Intl.NumberFormat("pl-PL", {
                         style: "currency",
                         currency: transaction.account.currency,
