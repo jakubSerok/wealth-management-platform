@@ -22,7 +22,7 @@ export async function getUserAccounts() {
 
     return {
       ...user,
-      accounts: user.accounts.map((account) => ({
+      accounts: user.accounts.map((account: any) => ({
         ...account,
         balance: Number(account.balance),
       })),
