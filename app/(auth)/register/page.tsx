@@ -126,6 +126,20 @@ export default function RegisterPage() {
           </div>
         </CardContent>
       </Card>
+      <div className="mt-4 text-center">
+        <Card className="w-full max-w-md bg-blue-50 border-blue-200">
+          <CardContent className="pt-6">
+            <h3 className="font-semibold text-blue-900 mb-2">Konto Demo</h3>
+            <div className="text-sm text-blue-800 space-y-1">
+              <p><strong>Login:</strong> test@gmail.com</p>
+              <p><strong>Hasło:</strong> Test123!</p>
+            </div>
+            <p className="text-xs text-blue-600 mt-2">
+              Chcesz przetestować? <Link href="/login" className="underline">Zaloguj się kontem demo</Link>
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

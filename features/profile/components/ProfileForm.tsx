@@ -112,6 +112,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               <Button
                 type="button"
                 variant="outline"
+                disabled={true}
                 size="sm"
                 onClick={() => setShowPasswordFields(!showPasswordFields)}
               >
