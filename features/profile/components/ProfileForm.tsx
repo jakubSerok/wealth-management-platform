@@ -114,6 +114,22 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                     </p>
                   )}
                 </div>
+          <div className="border-t pt-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Lock className="h-4 w-4" />
+                <Label className="text-base font-medium">Change password</Label>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={true}
+                size="sm"
+                onClick={() => setShowPasswordFields(!showPasswordFields)}
+              >
+                {showPasswordFields ? "Cancel" : "Change password"}
+              </Button>
+            </div>
 
                 <div className="space-y-2">
                   <Label

@@ -195,7 +195,7 @@ export async function getRecentTransactions(userId: string) {
 // Get monthly dividends data for a user
 export async function getMonthlyDividends(userId: string) {
   const currentMonth = new Date();
-  const months = [];
+  const months: { month: string; amount: number }[] = [];
 
   // Get user's account IDs first
   const userAccounts = await db.account.findMany({
@@ -245,7 +245,7 @@ export async function getMonthlyDividends(userId: string) {
 // Get monthly net worth data for a user
 export async function getMonthlyNetWorth(userId: string) {
   const currentMonth = new Date();
-  const months = [];
+  const months: { month: string; value: number }[] = [];
 
   for (let i = 5; i >= 0; i--) {
     const month = new Date(
