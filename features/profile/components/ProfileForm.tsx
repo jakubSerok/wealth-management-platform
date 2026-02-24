@@ -114,63 +114,66 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                     </p>
                   )}
                 </div>
-          <div className="border-t pt-4">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Lock className="h-4 w-4" />
-                <Label className="text-base font-medium">Change password</Label>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={true}
-                size="sm"
-                onClick={() => setShowPasswordFields(!showPasswordFields)}
-              >
-                {showPasswordFields ? "Cancel" : "Change password"}
-              </Button>
-            </div>
+                <div className="border-t pt-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <Lock className="h-4 w-4" />
+                      <Label className="text-base font-medium">
+                        Change password
+                      </Label>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={true}
+                      size="sm"
+                      onClick={() => setShowPasswordFields(!showPasswordFields)}
+                    >
+                      {showPasswordFields ? "Cancel" : "Change password"}
+                    </Button>
+                  </div>
 
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="firstName"
-                    className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
-                  >
-                    <UserCheck className="h-4 w-4" />
-                    Imię
-                  </Label>
-                  <Input
-                    id="firstName"
-                    {...register("firstName")}
-                    placeholder="Wprowadź imię"
-                    className={`h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500 ${errors.firstName ? "border-red-500" : ""}`}
-                  />
-                  {errors.firstName && (
-                    <p className="text-sm text-red-600 dark:text-red-400">
-                      {errors.firstName.message}
-                    </p>
-                  )}
-                </div>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="firstName"
+                      className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
+                    >
+                      <UserCheck className="h-4 w-4" />
+                      Imię
+                    </Label>
+                    <Input
+                      id="firstName"
+                      {...register("firstName")}
+                      placeholder="Wprowadź imię"
+                      className={`h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500 ${errors.firstName ? "border-red-500" : ""}`}
+                    />
+                    {errors.firstName && (
+                      <p className="text-sm text-red-600 dark:text-red-400">
+                        {errors.firstName.message}
+                      </p>
+                    )}
+                  </div>
 
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="lastName"
-                    className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
-                  >
-                    <User className="h-4 w-4" />
-                    Nazwisko
-                  </Label>
-                  <Input
-                    id="lastName"
-                    {...register("lastName")}
-                    placeholder="Wprowadź nazwisko"
-                    className={`h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500 ${errors.lastName ? "border-red-500" : ""}`}
-                  />
-                  {errors.lastName && (
-                    <p className="text-sm text-red-600 dark:text-red-400">
-                      {errors.lastName.message}
-                    </p>
-                  )}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="lastName"
+                      className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
+                    >
+                      <User className="h-4 w-4" />
+                      Nazwisko
+                    </Label>
+                    <Input
+                      id="lastName"
+                      {...register("lastName")}
+                      placeholder="Wprowadź nazwisko"
+                      className={`h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500 ${errors.lastName ? "border-red-500" : ""}`}
+                    />
+                    {errors.lastName && (
+                      <p className="text-sm text-red-600 dark:text-red-400">
+                        {errors.lastName.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -199,7 +202,6 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
                   className="space-y-4"
                 >
