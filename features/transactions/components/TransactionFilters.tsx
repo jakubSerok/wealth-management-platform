@@ -92,28 +92,40 @@ export function TransactionFiltersComponent({
   );
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-gray-200 dark:border-gray-700 shadow-sm">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Filters</CardTitle>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+              <Search className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Filtry
+            </CardTitle>
+          </div>
           {hasActiveFilters && (
             <Button
               variant="outline"
               size="sm"
               onClick={clearFilters}
-              className="text-xs"
+              className="h-8 px-3 text-xs border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               <X className="h-3 w-3 mr-1" />
-              Clear
+              Wyczyść
             </Button>
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Account filter */}
           <div className="space-y-2">
-            <Label htmlFor="account">Konto</Label>
+            <Label
+              htmlFor="account"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Konto
+            </Label>
             <Select
               value={filters.accountId || "all"}
               onValueChange={(value) =>
@@ -123,14 +135,19 @@ export function TransactionFiltersComponent({
                 )
               }
             >
-              <SelectTrigger>
-                <SelectValue placeholder="All accounts" />
+              <SelectTrigger className="h-10 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500">
+                <SelectValue placeholder="Wszystkie konta" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All accounts</SelectItem>
+                <SelectItem value="all">Wszystkie konta</SelectItem>
                 {accounts.map((account) => (
                   <SelectItem key={account.id} value={account.id}>
-                    {account.name} ({account.currency})
+                    <div className="flex items-center gap-2">
+                      <span>💳</span>
+                      <span>
+                        {account.name} ({account.currency})
+                      </span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -139,7 +156,12 @@ export function TransactionFiltersComponent({
 
           {/* Category filter */}
           <div className="space-y-2">
-            <Label htmlFor="category">Kategoria</Label>
+            <Label
+              htmlFor="category"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Kategoria
+            </Label>
             <Select
               value={filters.categoryId || "all"}
               onValueChange={(value) =>
@@ -149,14 +171,17 @@ export function TransactionFiltersComponent({
                 )
               }
             >
-              <SelectTrigger>
-                <SelectValue placeholder="All categories" />
+              <SelectTrigger className="h-10 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500">
+                <SelectValue placeholder="Wszystkie kategorie" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All categories</SelectItem>
+                <SelectItem value="all">Wszystkie kategorie</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
-                    {category.name}
+                    <div className="flex items-center gap-2">
+                      {category.icon && <span>{category.icon}</span>}
+                      <span>{category.name}</span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -165,9 +190,14 @@ export function TransactionFiltersComponent({
 
           {/* Search by description */}
           <div className="space-y-2">
-            <Label htmlFor="search">Szukaj</Label>
+            <Label
+              htmlFor="search"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Szukaj
+            </Label>
             <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
                 id="search"
                 placeholder="Opis transakcji..."
@@ -175,14 +205,19 @@ export function TransactionFiltersComponent({
                 onChange={(e) =>
                   handleFilterChange("description", e.target.value)
                 }
-                className="pl-8"
+                className="pl-10 h-10 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
           </div>
 
           {/* Transaction type */}
           <div className="space-y-2">
-            <Label htmlFor="type">Typ</Label>
+            <Label
+              htmlFor="type"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Typ
+            </Label>
             <Select
               value={filters.type || "all"}
               onValueChange={(value) =>
@@ -192,34 +227,71 @@ export function TransactionFiltersComponent({
                 )
               }
             >
-              <SelectTrigger>
-                <SelectValue placeholder="All types" />
+              <SelectTrigger className="h-10 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500">
+                <SelectValue placeholder="Wszystkie typy" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All types</SelectItem>
-                <SelectItem value="INCOME">Income</SelectItem>
-                <SelectItem value="EXPENSE">Expense</SelectItem>
-                <SelectItem value="TRANSFER_IN">Transfer incoming</SelectItem>
-                <SelectItem value="TRANSFER_OUT">Transfer outgoing</SelectItem>
-                <SelectItem value="INVESTMENT">Investment</SelectItem>
-                <SelectItem value="DIVIDEND">Dividend</SelectItem>
-                <SelectItem value="INTEREST">Interest</SelectItem>
+                <SelectItem value="all">Wszystkie typy</SelectItem>
+                <SelectItem value="INCOME">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full" />
+                    <span>Przychód</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="EXPENSE">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-red-500 rounded-full" />
+                    <span>Wydatek</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="TRANSFER_IN">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full" />
+                    <span>Przelew przychodzący</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="TRANSFER_OUT">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full" />
+                    <span>Przelew wychodzący</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="INVESTMENT">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full" />
+                    <span>Inwestycja</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="DIVIDEND">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full" />
+                    <span>Dywidenda</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="INTEREST">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-orange-500 rounded-full" />
+                    <span>Odsetki</span>
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Date from */}
           <div className="space-y-2">
-            <Label>Date from</Label>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Data od
+            </Label>
             <Popover open={isDateFromOpen} onOpenChange={setIsDateFromOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !filters.dateFrom && "text-muted-foreground",
+                    "w-full justify-start text-left font-normal h-10 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500",
+                    !filters.dateFrom && "text-gray-500",
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
@@ -246,14 +318,16 @@ export function TransactionFiltersComponent({
 
           {/* Date to */}
           <div className="space-y-2">
-            <Label>Date to</Label>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Data do
+            </Label>
             <Popover open={isDateToOpen} onOpenChange={setIsDateToOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !filters.dateTo && "text-muted-foreground",
+                    "w-full justify-start text-left font-normal h-10 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500",
+                    !filters.dateTo && "text-gray-500",
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
@@ -281,10 +355,15 @@ export function TransactionFiltersComponent({
 
         {/* Tags */}
         <div className="space-y-2">
-          <Label htmlFor="tags">Tags (comma-separated)</Label>
+          <Label
+            htmlFor="tags"
+            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
+            Tagi (oddzielone przecinkami)
+          </Label>
           <Input
             id="tags"
-            placeholder="e.g. food, work, shopping"
+            placeholder="np. jedzenie, praca, zakupy"
             value={filters.tags?.join(", ") || ""}
             onChange={(e) => {
               const tags = e.target.value
@@ -293,6 +372,7 @@ export function TransactionFiltersComponent({
                 .filter((tag) => tag.length > 0);
               handleFilterChange("tags", tags.length > 0 ? tags : undefined);
             }}
+            className="h-10 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500"
           />
         </div>
       </CardContent>

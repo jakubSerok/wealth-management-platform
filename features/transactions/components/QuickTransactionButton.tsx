@@ -44,14 +44,20 @@ export function QuickTransactionButton({
         size="sm"
         variant={type === "deposit" ? "default" : "destructive"}
         onClick={() => setIsModalOpen(true)}
-        className="h-8 px-2"
+        className={`h-9 px-3 font-medium shadow-md hover:shadow-lg transition-all duration-200 ${
+          type === "deposit"
+            ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white border-0"
+            : "bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white border-0"
+        }`}
       >
         {type === "deposit" ? (
-          <Plus className="h-3 w-3 mr-1" />
+          <Plus className="h-3 w-3 mr-1.5" />
         ) : (
-          <Minus className="h-3 w-3 mr-1" />
+          <Minus className="h-3 w-3 mr-1.5" />
         )}
-        {type === "deposit" ? "Wpłać" : "Wypłać"}
+        <span className="text-xs font-semibold">
+          {type === "deposit" ? "Wpłać" : "Wypłać"}
+        </span>
       </Button>
 
       <TransactionModal

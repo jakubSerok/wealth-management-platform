@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { AddNewCard } from "./AddNewCard";
+import { motion } from "framer-motion";
 
 interface AddAccountCardProps {
   onAccountCreated?: () => void;
@@ -8,25 +9,36 @@ interface AddAccountCardProps {
 
 export function AddAccountCard({ onAccountCreated }: AddAccountCardProps) {
   return (
-    <AddNewCard onAccountCreated={onAccountCreated}>
-      <Card className="relative overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.02] cursor-pointer border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900/50 hover:border-gray-400 dark:hover:border-gray-500 group">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 opacity-50" />
-        <CardHeader className="pb-3 relative">
-          <div className="flex items-center justify-center h-20">
-            <div className="p-4 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 group-hover:from-gray-500 group-hover:to-gray-600 transition-all duration-200">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
+      whileHover={{ y: -5 }}
+    >
+      <AddNewCard onAccountCreated={onAccountCreated}>
+        <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] cursor-pointer border-2 border-dashed border-blue-300 bg-linear-to-br from-blue-50 to-indigo-50 hover:border-blue-400 group min-h-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-linear-to-br from-blue-100/20 to-indigo-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+          <div className="relative z-10">
+            <motion.div
+              className="p-4 rounded-full bg-linear-to-br from-blue-400 to-indigo-500 shadow-lg group-hover:from-blue-500 group-hover:to-indigo-600 transition-all duration-300"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
               <Plus className="h-8 w-8 text-white" />
+            </motion.div>
+
+            <div className="text-center mt-4 space-y-2">
+              <div className="text-lg font-bold text-gray-800 group-hover:text-blue-700 transition-colors duration-200">
+                Add New Account
+              </div>
+              <div className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-200">
+                Click to create a new account
+              </div>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="relative text-center">
-          <div className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-            Add New Account
-          </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Click to create a new account
-          </div>
-        </CardContent>
-      </Card>
-    </AddNewCard>
+        </Card>
+      </AddNewCard>
+    </motion.div>
   );
 }

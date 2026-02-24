@@ -128,200 +128,313 @@ export function BudgetModal({ isOpen, onClose, onSuccess }: BudgetModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Nowy Budżet</DialogTitle>
+      <DialogContent className="sm:max-w-[580px] max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="text-center pb-6">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+            <span className="text-2xl">💰</span>
+          </div>
+          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Nowy Budżet
+          </DialogTitle>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            Stwórz nowy budżet, aby lepiej zarządzać swoimi finansami
+          </p>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Nazwa budżetu</Label>
-            <Input
-              id="name"
-              placeholder="np. Zakupy spożywcze"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, name: e.target.value }))
-              }
-              required
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* --- Basic Information --- */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="name"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Nazwa budżetu
+                </Label>
+                <Input
+                  id="name"
+                  placeholder="np. Zakupy spożywcze"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
+                  }
+                  className="h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500"
+                  required
+                />
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="amount">Kwota limitu</Label>
-            <Input
-              id="amount"
-              type="number"
-              step="0.01"
-              min="0"
-              placeholder="2000"
-              value={formData.amount}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, amount: e.target.value }))
-              }
-              required
-            />
-          </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="amount"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Kwota limitu
+                </Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="2000"
+                  value={formData.amount}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, amount: e.target.value }))
+                  }
+                  className="h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500"
+                  required
+                />
+              </div>
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="period">Okres</Label>
-            <Select
-              value={formData.period}
-              onValueChange={(value) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  period: value as BudgetPeriod,
-                }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="WEEKLY">Tygodniowy</SelectItem>
-                <SelectItem value="MONTHLY">Miesięczny</SelectItem>
-                <SelectItem value="QUARTERLY">Kwartalny</SelectItem>
-                <SelectItem value="YEARLY">Roczny</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="categoryId">Kategoria (opcjonalnie)</Label>
-            <Select
-              value={formData.categoryId}
-              onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, categoryId: value }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Wybierz kategorię" />
-              </SelectTrigger>
-              <SelectContent>
-                {mainCategories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
+            <div className="space-y-2">
+              <Label
+                htmlFor="period"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Okres
+              </Label>
+              <Select
+                value={formData.period}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    period: value as BudgetPeriod,
+                  }))
+                }
+              >
+                <SelectTrigger className="h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="WEEKLY">
                     <div className="flex items-center gap-2">
-                      {category.icon && <span>{category.icon}</span>}
-                      <span>{category.name}</span>
+                      <span>📅</span>
+                      <span>Tygodniowy</span>
                     </div>
                   </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="accountId">Konto (opcjonalnie)</Label>
-            <Select
-              value={formData.accountId}
-              onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, accountId: value }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Wybierz konto" />
-              </SelectTrigger>
-              <SelectContent>
-                {accounts.map((account) => (
-                  <SelectItem key={account.id} value={account.id}>
-                    {account.name} ({account.currency})
+                  <SelectItem value="MONTHLY">
+                    <div className="flex items-center gap-2">
+                      <span>📆</span>
+                      <span>Miesięczny</span>
+                    </div>
                   </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Data początkowa</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !formData.startDate && "text-muted-foreground",
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.startDate ? (
-                      format(formData.startDate, "PPP", { locale: pl })
-                    ) : (
-                      <span>Wybierz datę</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={formData.startDate}
-                    onSelect={(date) =>
-                      date &&
-                      setFormData((prev) => ({ ...prev, startDate: date }))
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Data końcowa</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !formData.endDate && "text-muted-foreground",
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.endDate ? (
-                      format(formData.endDate, "PPP", { locale: pl })
-                    ) : (
-                      <span>Wybierz datę</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={formData.endDate}
-                    onSelect={(date) =>
-                      date &&
-                      setFormData((prev) => ({ ...prev, endDate: date }))
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+                  <SelectItem value="QUARTERLY">
+                    <div className="flex items-center gap-2">
+                      <span>📊</span>
+                      <span>Kwartalny</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="YEARLY">
+                    <div className="flex items-center gap-2">
+                      <span>📈</span>
+                      <span>Roczny</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="emailAlert"
-              checked={formData.emailAlert}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  emailAlert: e.target.checked,
-                }))
-              }
-              className="rounded border-gray-300"
-            />
-            <Label htmlFor="emailAlert" className="text-sm">
-              Wyślij email, gdy przekroczę 80% budżetu
-            </Label>
+          {/* --- Optional Settings --- */}
+          <div className="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider">
+              Ustawienia dodatkowe
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="categoryId"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Kategoria (opcjonalnie)
+                </Label>
+                <Select
+                  value={formData.categoryId}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, categoryId: value }))
+                  }
+                >
+                  <SelectTrigger className="h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500">
+                    <SelectValue placeholder="Wybierz kategorię" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mainCategories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        <div className="flex items-center gap-2">
+                          {category.icon && <span>{category.icon}</span>}
+                          <span>{category.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="accountId"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Konto (opcjonalnie)
+                </Label>
+                <Select
+                  value={formData.accountId}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, accountId: value }))
+                  }
+                >
+                  <SelectTrigger className="h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500">
+                    <SelectValue placeholder="Wybierz konto" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {accounts.map((account) => (
+                      <SelectItem key={account.id} value={account.id}>
+                        <div className="flex items-center gap-2">
+                          <span>💳</span>
+                          <span>
+                            {account.name} ({account.currency})
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* --- Date Range --- */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Zakres dat
+              </Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Data początkowa
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500",
+                          !formData.startDate && "text-muted-foreground",
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {formData.startDate ? (
+                          format(formData.startDate, "PPP", { locale: pl })
+                        ) : (
+                          <span>Wybierz datę</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={formData.startDate}
+                        onSelect={(date) =>
+                          date &&
+                          setFormData((prev) => ({ ...prev, startDate: date }))
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Data końcowa
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal h-11 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500",
+                          !formData.endDate && "text-muted-foreground",
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {formData.endDate ? (
+                          format(formData.endDate, "PPP", { locale: pl })
+                        ) : (
+                          <span>Wybierz datę</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={formData.endDate}
+                        onSelect={(date) =>
+                          date &&
+                          setFormData((prev) => ({ ...prev, endDate: date }))
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+            </div>
+
+            {/* --- Email Alert --- */}
+            <div className="flex items-start space-x-3 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <input
+                type="checkbox"
+                id="emailAlert"
+                checked={formData.emailAlert}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    emailAlert: e.target.checked,
+                  }))
+                }
+                className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <div className="flex-1">
+                <Label
+                  htmlFor="emailAlert"
+                  className="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer"
+                >
+                  Powiadomienia email
+                </Label>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  Wyślij powiadomienie, gdy przekroczysz 80% budżetu
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
+          {/* --- Actions --- */}
+          <div className="flex justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="px-6 h-11 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
               Anuluj
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Zapisywanie..." : "Utwórz budżet"}
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="px-6 h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Zapisywanie...
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span>✨</span>
+                  Utwórz budżet
+                </div>
+              )}
             </Button>
           </div>
         </form>
